@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keyscape — a keyboard you can hear</title>
+  <meta name="description" content="A 3D keyboard playground: tilt it, view it over your camera, test shortcuts, play typing games, and hear thock, clack, clicky and creamy switch sounds.">
+  <meta name="theme-color" content="#CFE2DC">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='10' width='56' height='44' rx='10' fill='%2327404D'/%3E%3Crect x='14' y='18' width='36' height='26' rx='7' fill='%23EE9B3A'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <video id="camera" class="camera" playsinline muted aria-hidden="true"></video>
+
+  <header class="top">
+    <h1 class="wordmark" id="wordmark" aria-label="Keyscape"></h1>
+    <div class="top-actions">
+      <button class="pill" id="camBtn" type="button" aria-pressed="false">Camera view</button>
+      <button class="pill" id="resetBtn" type="button">Reset tilt</button>
+      <button class="pill" id="muteBtn" type="button" aria-pressed="false">Mute</button>
+    </div>
+  </header>
+
+  <p class="lede">A keyboard you can tilt, type on, and listen to. Pick a switch below, then press any key&nbsp;— on your own keyboard or on this one.</p>
+
+  <main>
+    <section class="stage" id="stage" aria-label="3D keyboard. Drag empty space to tilt it.">
+      <div class="desk-shadow" aria-hidden="true"></div>
+      <div class="board" id="board">
+        <div class="case">
+          <div class="plate" id="plate"></div>
+        </div>
+      </div>
+      <p class="stage-hint" id="stageHint">Drag around the keyboard to tilt it</p>
+    </section>
+
+    <div class="readout" aria-live="polite">
+      <p>Last key <kbd id="lastKey">none yet</kbd> <span class="muted" id="lastCode"></span></p>
+      <p><strong id="testedCount">0</strong> of <span id="totalCount">84</span> keys tested <button class="link" id="clearTested" type="button">Clear</button></p>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Modes">
+      <button role="tab" id="tab-sound" aria-controls="panel-sound" aria-selected="true">Sound board</button>
+      <button role="tab" id="tab-shortcuts" aria-controls="panel-shortcuts" aria-selected="false" tabindex="-1">Shortcut tester</button>
+      <button role="tab" id="tab-play" aria-controls="panel-play" aria-selected="false" tabindex="-1">Games</button>
+    </nav>
+
+    <!-- SOUND -->
+    <section class="panel" id="panel-sound" role="tabpanel" aria-labelledby="tab-sound">
+      <div class="panel-head">
+        <h2>Choose a switch</h2>
+        <p>Every sound is generated live in your browser, so each press is slightly different, like a real board.</p>
+      </div>
+      <div class="switches" id="switches"></div>
+
+      <div class="tuning">
+        <fieldset class="seg" id="caseSeg">
+          <legend>Case material</legend>
+        </fieldset>
+        <label class="slider">Volume
+          <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7">
+        </label>
+        <label class="slider">Pitch
+          <input type="range" id="pitch" min="0.7" max="1.35" step="0.01" value="1">
+        </label>
+        <button class="btn" id="demoBtn" type="button">Play typing demo</button>
+      </div>
+    </section>
+
+    <!-- SHORTCUTS -->
+    <section class="panel" id="panel-shortcuts" role="tabpanel" aria-labelledby="tab-shortcuts" hidden>
+      <div class="panel-head">
+        <h2>Press a shortcut</h2>
+        <p>While this tab is open, Keyscape catches common shortcuts instead of your browser, so nothing gets saved or printed. Shortcuts that close tabs or windows are left out on purpose.</p>
+      </div>
+      <div class="combo" id="combo" aria-live="polite"><span class="muted">Hold a modifier and press a key</span></div>
+      <div class="shortcut-grid">
+        <ul class="shortcut-list" id="shortcutList"></ul>
+        <div class="log-wrap">
+          <h3>Key event log</h3>
+          <p class="muted small">What your browser reports for each key. Handy for checking a new board or a remap.</p>
+          <table class="log">
+            <thead><tr><th>key</th><th>code</th><th>side</th></tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAY -->
+    <section class="panel" id="panel-play" role="tabpanel" aria-labelledby="tab-play" hidden>
+      <div class="games">
+        <article class="game" id="chase">
+          <h2>Chase the light</h2>
+          <p>A key lights up on the board. Press it as fast as you can. You have 30 seconds.</p>
+          <div class="scores">
+            <p><strong id="chaseScore">0</strong> hits</p>
+            <p><strong id="chaseAvg">–</strong> ms average</p>
+            <p><strong id="chaseTime">30.0</strong> s left</p>
+            <p class="muted">Best: <span id="chaseBest">–</span></p>
+          </div>
+          <button class="btn" id="chaseBtn" type="button">Start chase</button>
+        </article>
+
+        <article class="game" id="sprint">
+          <h2>Type sprint</h2>
+          <p>Type the words below for 30 seconds. The next key glows on the board.</p>
+          <div class="sprint-text" id="sprintText" aria-live="off"></div>
+          <div class="scores">
+            <p><strong id="sprintWpm">0</strong> wpm</p>
+            <p><strong id="sprintAcc">100</strong>% accuracy</p>
+            <p><strong id="sprintTime">30.0</strong> s left</p>
+            <p class="muted">Best: <span id="sprintBest">–</span></p>
+          </div>
+          <button class="btn" id="sprintBtn" type="button">Start sprint</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Keyscape runs entirely in your browser. Camera view never leaves your device.</p>
+  </footer>
+
+  <p class="toast" id="toast" role="status" hidden></p>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
