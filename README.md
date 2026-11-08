@@ -1,11 +1,10 @@
 # Keyscape
 
-A 3D keyboard playground in the browser. Tilt the board, put it over your camera, test shortcuts, play typing games, and hear what different switches sound like.
+A 3D keyboard playground in the browser. Tilt the board, test shortcuts, play typing games, and hear what different switches sound like.
 
 ## What's on the page
 
 - **3D keyboard.** A 75% layout (84 keys) built in CSS 3D. Drag the space around it to tilt it. Keys press down when you type on your own keyboard, and you can tap or click them too. A green dot marks each key you've tested, which helps when checking a new board.
-- **Camera view.** Shows your camera feed behind the keyboard so it looks like it's floating on your desk. On a phone, tilting the phone tilts the board. Nothing is recorded or uploaded.
 - **Sound board.** Six switch sounds, all generated live with the Web Audio API (no audio files): Thock, Clack, Clicky, Creamy, Marbly and Typewriter (with a bell on Enter). You can change the case material (Aluminum, Polycarbonate, Brass, Walnut), volume and pitch.
 - **Shortcut tester.** Press common shortcuts (copy, paste, undo, save, find and more) and they get ticked off. The page adapts to Mac or Windows. The browser doesn't act on them while this tab is open. A live log shows each key's `key`, `code` and side.
 - **Games.** *Chase the light* (hit the glowing key, 30 seconds) and *Type sprint* (30-second WPM test, with the next key lit on the board). Best scores are saved in your browser.
@@ -18,7 +17,7 @@ It's plain HTML, CSS and JavaScript with no build step. Serve the folder with an
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000. You need a server because the JavaScript is loaded as ES modules, which don't load from `file://`. Camera view also needs `localhost` or HTTPS.
+Then open http://localhost:8000. You need a server because the JavaScript is loaded as ES modules, which don't load from `file://`.
 
 ## Put it live with GitHub Pages
 
@@ -29,15 +28,23 @@ Then open http://localhost:8000. You need a server because the JavaScript is loa
 
 The `.nojekyll` file tells Pages to serve the files as they are.
 
-## Moving to your own domain later
+## Custom domain: keyboardcheat.codes
 
-1. In **Settings → Pages → Custom domain**, enter your domain (for example `keyscape.com`) and save. GitHub adds a `CNAME` file to the repo.
-2. At your domain registrar, add DNS records:
-   - For a subdomain like `www.keyscape.com`: a `CNAME` record pointing to `techkayacodes.github.io`.
-   - For the bare domain: `A` records pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`.
-3. Once DNS has updated, tick **Enforce HTTPS**. Camera view needs HTTPS.
+The site is served at **https://keyboardcheat.codes**. The `CNAME` file in this repo tells GitHub Pages which domain to answer for.
 
-All paths on the site are relative, so it works both at `/keyscape/` and at the root of a custom domain.
+DNS records at Namecheap (**Domain List → Manage → Advanced DNS → Host Records**):
+
+| Type | Host | Value |
+| --- | --- | --- |
+| A Record | `@` | `185.199.108.153` |
+| A Record | `@` | `185.199.109.153` |
+| A Record | `@` | `185.199.110.153` |
+| A Record | `@` | `185.199.111.153` |
+| CNAME Record | `www` | `techkayacodes.github.io.` |
+
+Remove any default Namecheap records for `@` or `www` (the parking page CNAME and URL redirect records) first.
+
+Then in **Settings → Pages**, confirm the custom domain shows `keyboardcheat.codes`, wait for the DNS check to pass, and tick **Enforce HTTPS**.
 
 ## Project layout
 
@@ -46,5 +53,5 @@ index.html        page structure
 css/styles.css    colorway, 3D keyboard, layout
 js/keyboard.js    key layout and key-to-code mapping
 js/audio.js       switch sound synthesis
-js/app.js         input, tilt, camera view, shortcuts, games
+js/app.js         input, tilt, shortcuts, games
 ```

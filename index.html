@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Keyscape — a keyboard you can hear</title>
-  <meta name="description" content="A 3D keyboard playground: tilt it, view it over your camera, test shortcuts, play typing games, and hear thock, clack, clicky and creamy switch sounds.">
+  <meta name="description" content="A 3D keyboard playground: tilt it, test shortcuts, play typing games, and hear thock, clack, clicky and creamy switch sounds.">
   <meta name="theme-color" content="#CFE2DC">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='10' width='56' height='44' rx='10' fill='%2327404D'/%3E%3Crect x='14' y='18' width='36' height='26' rx='7' fill='%23EE9B3A'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,12 +13,9 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <video id="camera" class="camera" playsinline muted aria-hidden="true"></video>
-
   <header class="top">
     <h1 class="wordmark" id="wordmark" aria-label="Keyscape"></h1>
     <div class="top-actions">
-      <button class="pill" id="camBtn" type="button" aria-pressed="false">Camera view</button>
       <button class="pill" id="resetBtn" type="button">Reset tilt</button>
       <button class="pill" id="muteBtn" type="button" aria-pressed="false">Mute</button>
     </div>
@@ -122,7 +119,7 @@
   </main>
 
   <footer class="foot">
-    <p>Keyscape runs entirely in your browser. Camera view never leaves your device.</p>
+    <p>Keyscape runs entirely in your browser. Nothing you type is sent anywhere.</p>
   </footer>
 
   <p class="toast" id="toast" role="status" hidden></p>
