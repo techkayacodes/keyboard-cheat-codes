@@ -160,7 +160,7 @@ plate.addEventListener('pointerup', pointerUp);
 plate.addEventListener('pointercancel', pointerUp);
 plate.addEventListener('lostpointercapture', pointerUp);
 
-/* ---------- Tilt: drag, pointer parallax, device orientation ---------- */
+/* ---------- Tilt: drag to rotate ---------- */
 const stage = $('stage');
 const board = $('board');
 const root = document.documentElement;
@@ -206,68 +206,6 @@ function hideHint() {
   hintHidden = true;
   $('stageHint').classList.add('gone');
 }
-
-/* ---------- Camera view (AR-style passthrough) ---------- */
-let camStream = null;
-let orientationOn = false;
-
-function onOrientation(e) {
-  if (e.beta == null) return;
-  // Phone held upright looking at a desk: beta ~ 45-90. Keep the board level with the world.
-  tilt.rx = clamp(80 - e.beta * 0.7, 5, 75);
-  tilt.ry = clamp((e.gamma || 0) * 0.8, -45, 45);
-  board.classList.add('live');
-  applyTilt();
-}
-
-async function startOrientation() {
-  const DOE = window.DeviceOrientationEvent;
-  if (!DOE) return;
-  try {
-    if (typeof DOE.requestPermission === 'function') {
-      const res = await DOE.requestPermission();
-      if (res !== 'granted') return;
-    }
-    window.addEventListener('deviceorientation', onOrientation);
-    orientationOn = true;
-  } catch { /* not available */ }
-}
-
-$('camBtn').addEventListener('click', async () => {
-  const btn = $('camBtn');
-  const video = $('camera');
-  if (camStream) {
-    camStream.getTracks().forEach((t) => t.stop());
-    camStream = null;
-    video.srcObject = null;
-    document.body.classList.remove('ar');
-    btn.setAttribute('aria-pressed', 'false');
-    btn.textContent = 'Camera view';
-    if (orientationOn) { window.removeEventListener('deviceorientation', onOrientation); orientationOn = false; }
-    board.classList.remove('live');
-    tilt = { ...BASE() }; applyTilt();
-    return;
-  }
-  if (!navigator.mediaDevices?.getUserMedia) {
-    toast('Camera view needs a browser with camera access over HTTPS.');
-    return;
-  }
-  try {
-    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
-    video.srcObject = camStream;
-    await video.play();
-    document.body.classList.add('ar');
-    btn.setAttribute('aria-pressed', 'true');
-    btn.textContent = 'Close camera';
-    startOrientation();
-    toast('Point your camera at a desk. On a phone, tilt to move the board.');
-  } catch (err) {
-    camStream = null;
-    toast(err && err.name === 'NotAllowedError'
-      ? 'Camera blocked. Allow camera access in your browser settings to use camera view.'
-      : 'No camera found on this device.');
-  }
-});
 
 /* ---------- Mute ---------- */
 $('muteBtn').addEventListener('click', () => {

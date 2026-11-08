@@ -47,18 +47,6 @@ kbd {
 .muted { color: var(--muted); }
 .small { font-size: 0.9rem; }
 
-/* Camera / AR background */
-.camera {
-  position: fixed; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: -1; display: none;
-}
-body.ar { background: #000; }
-body.ar .camera { display: block; }
-body.ar .lede, body.ar .foot { color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
-body.ar .wordmark .wm-letter { color: #fff; text-shadow: 0 3px 14px rgba(0,0,0,.5); }
-body.ar .readout, body.ar .tabs, body.ar .panel { background: rgba(243, 238, 227, 0.92); }
-body.ar .desk-shadow { opacity: .5; }
-
 /* Header */
 .top {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
@@ -86,8 +74,6 @@ body.ar .desk-shadow { opacity: .5; }
   cursor: pointer;
 }
 .pill[aria-pressed="true"] { background: var(--slate); color: var(--bone); }
-body.ar .pill { background: rgba(243,238,227,.9); }
-body.ar .pill[aria-pressed="true"] { background: var(--slate); }
 
 .lede {
   max-width: 1180px; margin: 12px auto 0; padding: 0 24px;
@@ -114,7 +100,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
   transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz));
   transition: transform 600ms cubic-bezier(.2,.8,.2,1);
 }
-.stage.dragging .board, .board.live { transition: none; }
+.stage.dragging .board { transition: none; }
 .board.intro { animation: rise 1100ms cubic-bezier(.2,.8,.2,1) both; }
 @keyframes rise {
   from { transform: translateY(60px) rotateX(70deg) rotateY(0) rotateZ(-8deg); opacity: 0; }
@@ -148,7 +134,6 @@ main { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
   text-align: center; color: var(--muted); font-size: .95rem;
   transition: opacity 400ms;
 }
-body.ar .stage-hint { color: #fff; text-shadow: 0 1px 4px #000; }
 .stage-hint.gone { opacity: 0; }
 
 /* Keys */
@@ -244,7 +229,6 @@ body.ar .stage-hint { color: #fff; text-shadow: 0 1px 4px #000; }
   border-bottom: 3px solid var(--slate);
   overflow-x: auto;
 }
-body.ar .tabs { border-radius: 12px 12px 0 0; padding: 6px 6px 0; }
 .tabs [role="tab"] {
   background: none; border: 0; cursor: pointer;
   font: 600 1.15rem var(--display);
@@ -255,7 +239,6 @@ body.ar .tabs { border-radius: 12px 12px 0 0; padding: 6px 6px 0; }
 .tabs [role="tab"][aria-selected="true"] { background: var(--slate); color: var(--bone); }
 
 .panel { padding: 24px 0 8px; }
-body.ar .panel { padding: 24px 18px 18px; border-radius: 0 0 14px 14px; }
 .panel-head { max-width: 62ch; }
 .panel h2, .game h2 { font: 600 1.7rem/1.15 var(--display); margin: 0 0 6px; letter-spacing: -0.01em; }
 .panel-head p { margin: 0 0 18px; }
