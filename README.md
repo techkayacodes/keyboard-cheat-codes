@@ -4,7 +4,9 @@ A 3D keyboard playground in the browser. Tilt the board, test shortcuts, play ty
 
 ## What's on the page
 
-- **3D keyboard.** A 75% layout (84 keys) built in CSS 3D. Drag the space around it to tilt it. Keys press down when you type on your own keyboard, and you can tap or click them too. A green dot marks each key you've tested, which helps when checking a new board.
+- **3D keyboard.** Built in CSS 3D, in five sizes: 60%, 65%, 75%, TKL and full-size with a numpad. Drag the space around it to tilt it. Keys press down when you type on your own keyboard, and you can tap or click them too. A green dot marks each key you've tested, which helps when checking a new board.
+- **Customize it.** Four keycap shapes (Cherry, SA, DSA, low profile) and seven colorways (Tidepool, Ember, Sakura, Matcha, Office beige, Mono, Signal). Your choices are remembered.
+- **Site themes.** Light, Dark, High contrast and Minimal. The theme changes the page around the keyboard; colorways change the keys.
 - **Sound board.** Six switch sounds, all generated live with the Web Audio API (no audio files): Thock, Clack, Clicky, Creamy, Marbly and Typewriter (with a bell on Enter). You can change the case material (Aluminum, Polycarbonate, Brass, Walnut), volume and pitch.
 - **Shortcut tester.** Press common shortcuts (copy, paste, undo, save, find and more) and they get ticked off. The page adapts to Mac or Windows. The browser doesn't act on them while this tab is open. A live log shows each key's `key`, `code` and side.
 - **Games.** *Chase the light* (hit the glowing key, 30 seconds) and *Type sprint* (30-second WPM test, with the next key lit on the board). Best scores are saved in your browser.
@@ -51,7 +53,8 @@ Then in **Settings → Pages**, confirm the custom domain shows `keyboardcheat.c
 ```
 index.html        page structure
 css/styles.css    colorway, 3D keyboard, layout
-js/keyboard.js    key layout and key-to-code mapping
+js/keyboard.js    the five layouts and key-to-code mapping
+js/themes.js      keycap colorways, keycap shapes, site themes
 js/audio.js       switch sound synthesis
 js/app.js         input, tilt, shortcuts, games
 ```
