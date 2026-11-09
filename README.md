@@ -68,6 +68,14 @@ Opening `index.html` by double-clicking it won't work, because browsers block th
 
 If you've cloned the repository and have Node.js, `npm start` does the same thing.
 
+## Contributing
+
+Keyscape is open source, and contributions are welcome: new switch sounds, layouts, colorways, bug fixes or ideas. [Open an issue](https://github.com/techkayacodes/keyscape/issues) to suggest something or report a problem, or fork the repo and send a pull request.
+
+## License
+
+Keyscape is released under the [MIT License](LICENSE). You're free to use, change and share the code, as long as you keep the copyright notice.
+
 ## For maintainers
 
 <details>

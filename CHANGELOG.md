@@ -27,3 +27,4 @@ The first release of Keyscape, live at [keyboardcheat.codes](https://keyboardche
 - Light, Dark, High contrast and Minimal themes.
 - Your settings and best scores are saved in your browser.
 - Works on desktop, tablet and phone.
+- Open source under the MIT License.
