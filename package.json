@@ -1,0 +1,25 @@
+{
+  "name": "keyscape",
+  "version": "1.0.0",
+  "description": "A 3D keyboard playground: switch sound board, keyboard tester, shortcut tester and typing games.",
+  "private": true,
+  "homepage": "https://keyboardcheat.codes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/techkayacodes/keyscape.git"
+  },
+  "bugs": {
+    "url": "https://github.com/techkayacodes/keyscape/issues"
+  },
+  "keywords": [
+    "keyboard",
+    "mechanical-keyboard",
+    "keyboard-tester",
+    "switch-sounds",
+    "typing-test",
+    "web-audio"
+  ],
+  "scripts": {
+    "start": "npx --yes http-server -p 8000 -c-1 ."
+  }
+}
