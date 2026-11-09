@@ -1,10 +1,10 @@
-# Keyscape
+# Keyboard Cheat Codes
 
 **Try it now: [keyboardcheat.codes](https://keyboardcheat.codes)**
 
-Keyscape is a keyboard playground that runs in your browser. Type on a 3D keyboard, hear what different mechanical switches sound like, check that every key on your own keyboard works, and practice shortcuts and typing speed. There's nothing to install and no account to create.
+Keyboard Cheat Codes is a keyboard playground that runs in your browser. Type on a 3D keyboard, hear what different mechanical switches sound like, check that every key on your own keyboard works, and practice shortcuts and typing speed. There's nothing to install and no account to create.
 
-![The Keyscape page: a tilted 3D keyboard in the Tidepool colorway, with size and keycap options below it](docs/screenshot.png)
+![The Keyboard Cheat Codes page: a tilted 3D keyboard in the Tidepool colorway, with size and keycap options below it](docs/screenshot.png)
 
 ## What you can do
 
@@ -50,9 +50,9 @@ Choose **Light**, **Dark**, **High contrast** or **Minimal** at the top of the p
 
 ## Download and run it yourself
 
-Each [release](https://github.com/techkayacodes/keyscape/releases) includes a ready-to-use zip of the website.
+Each [release](https://github.com/techkayacodes/keyboard-cheat-codes/releases) includes a ready-to-use zip of the website.
 
-1. Download `keyscape-vX.Y.Z.zip` from the latest release and unzip it.
+1. Download `keyboard-cheat-codes-vX.Y.Z.zip` from the latest release and unzip it.
 2. Start a small local web server in that folder. Pick one:
    - With Python:
      ```bash
@@ -70,11 +70,11 @@ If you've cloned the repository and have Node.js, `npm start` does the same thin
 
 ## Contributing
 
-Keyscape is open source, and contributions are welcome: new switch sounds, layouts, colorways, bug fixes or ideas. [Open an issue](https://github.com/techkayacodes/keyscape/issues) to suggest something or report a problem, or fork the repo and send a pull request.
+Keyboard Cheat Codes is open source, and contributions are welcome: new switch sounds, layouts, colorways, bug fixes or ideas. [Open an issue](https://github.com/techkayacodes/keyboard-cheat-codes/issues) to suggest something or report a problem, or fork the repo and send a pull request.
 
 ## License
 
-Keyscape is released under the [MIT License](LICENSE). You're free to use, change and share the code, as long as you keep the copyright notice.
+Keyboard Cheat Codes is released under the [MIT License](LICENSE). You're free to use, change and share the code, as long as you keep the copyright notice.
 
 ## For maintainers
 
@@ -106,7 +106,7 @@ Keep **Enforce HTTPS** ticked in the Pages settings.
      ```bash
      git tag v1.1.0 && git push origin v1.1.0
      ```
-4. The **Release** workflow creates the tag if needed, builds `keyscape-v1.1.0.zip`, and publishes a GitHub release using that version's changelog section as the release notes.
+4. The **Release** workflow creates the tag if needed, builds `keyboard-cheat-codes-v1.1.0.zip`, and publishes a GitHub release using that version's changelog section as the release notes.
 
 ### Project layout
 ```

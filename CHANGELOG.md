@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Renamed from Keyscape to Keyboard Cheat Codes, to match keyboardcheat.codes.
+
 ## v1.0.0
 
 The first release of Keyscape, live at [keyboardcheat.codes](https://keyboardcheat.codes).
