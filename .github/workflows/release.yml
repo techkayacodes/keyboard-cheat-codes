@@ -36,7 +36,7 @@ jobs:
 
       - name: Build the site zip
         run: |
-          name="keyscape-$TAG"
+          name="keyboard-cheat-codes-$TAG"
           mkdir -p "dist/$name"
           cp -r index.html css js docs .nojekyll README.md CHANGELOG.md LICENSE "dist/$name/"
           (cd dist && zip -r "$name.zip" "$name")
@@ -57,7 +57,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$TAG" "dist/keyscape-$TAG.zip" \
+          gh release create "$TAG" "dist/keyboard-cheat-codes-$TAG.zip" \
             --target "$GITHUB_SHA" \
-            --title "Keyscape $TAG" \
+            --title "Keyboard Cheat Codes $TAG" \
             --notes-file dist/notes.md

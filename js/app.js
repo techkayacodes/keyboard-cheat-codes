@@ -5,6 +5,7 @@ import { SwitchSynth, PROFILES, CASES } from './audio.js';
 const $ = (id) => document.getElementById(id);
 const synth = new SwitchSynth();
 
+// The storage prefix predates the rename; keeping it preserves visitors' saved settings.
 const store = {
   get(k, d) { try { const v = localStorage.getItem('keyscape:' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('keyscape:' + k, JSON.stringify(v)); } catch { /* private mode */ } },
@@ -30,15 +31,21 @@ renderBoard();
 applyColorway(boardEl, look.colorway);
 boardEl.dataset.profile = look.caps;
 
-const WORD = 'Keyscape';
+// Each letter of the name presses down when you type it.
+const BRAND = ['Keyboard', 'Cheat', 'Codes'];
 const wordmark = $('wordmark');
-[...WORD].forEach((ch) => {
-  const s = document.createElement('span');
-  s.className = 'wm-letter';
-  s.textContent = ch;
-  s.dataset.code = 'Key' + ch.toUpperCase();
-  s.setAttribute('aria-hidden', 'true');
-  wordmark.appendChild(s);
+BRAND.forEach((word) => {
+  const w = document.createElement('span');
+  w.className = 'wm-word';
+  w.setAttribute('aria-hidden', 'true');
+  [...word].forEach((ch) => {
+    const s = document.createElement('span');
+    s.className = 'wm-letter';
+    s.textContent = ch;
+    s.dataset.code = 'Key' + ch.toUpperCase();
+    w.appendChild(s);
+  });
+  wordmark.appendChild(w);
 });
 
 synth.profile = store.get('profile', 'thock') in PROFILES ? store.get('profile', 'thock') : 'thock';
@@ -279,7 +286,7 @@ Object.entries(PROFILES).forEach(([id, p]) => {
     synth.profile = id;
     store.set('profile', id);
     switchesEl.querySelectorAll('.switch').forEach((s) => s.setAttribute('aria-checked', String(s === b)));
-    roll(id === 'typewriter' ? 'keys\n' : 'keyscape', 75);
+    roll(id === 'typewriter' ? 'cheat\n' : 'cheat codes', 75);
     if (e.detail) b.blur();
   });
   switchesEl.appendChild(b);

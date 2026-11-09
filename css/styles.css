@@ -135,11 +135,15 @@ kbd {
 }
 .wordmark {
   margin: 0;
-  font: 800 clamp(3rem, 11vw, 7.5rem)/0.9 var(--display);
+  font: 800 clamp(2.5rem, 7.4vw, 5.6rem)/0.92 var(--display);
   letter-spacing: -0.045em;
   color: var(--ui);
   display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.24em;
+  max-width: 100%;
 }
+.wm-word { display: inline-flex; white-space: nowrap; }
 [data-theme="minimal"] .wordmark { font-weight: 600; letter-spacing: -0.035em; }
 .wm-letter { display: inline-block; transition: transform 60ms ease-out, color 60ms; }
 .wm-letter.down { transform: translateY(0.07em) scaleY(0.94); color: var(--accent-side); }
