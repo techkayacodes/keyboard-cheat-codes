@@ -1,4 +1,5 @@
-import { buildKeyboard, KEYS, IS_MAC, keyFor, codeForChar } from './keyboard.js';
+import { buildKeyboard, KEYS, LAYOUTS, IS_MAC, keyFor, codeForChar } from './keyboard.js';
+import { COLORWAYS, applyColorway, PROFILES_CAP, SITE_THEMES } from './themes.js';
 import { SwitchSynth, PROFILES, CASES } from './audio.js';
 
 const $ = (id) => document.getElementById(id);
@@ -11,8 +12,23 @@ const store = {
 
 /* ---------- Build ---------- */
 const plate = $('plate');
-buildKeyboard(plate);
-$('totalCount').textContent = KEYS.size;
+const boardEl = $('board');
+const pick = (key, fallback, valid) => { const v = store.get(key, fallback); return v in valid ? v : fallback; };
+const look = {
+  layout: pick('layout', '75', LAYOUTS),
+  caps: pick('caps', 'cherry', PROFILES_CAP),
+  colorway: pick('colorway', 'tidepool', COLORWAYS),
+  theme: SITE_THEMES[document.documentElement.dataset.theme] ? document.documentElement.dataset.theme : 'light',
+};
+
+function renderBoard() {
+  const { cols } = buildKeyboard(plate, look.layout);
+  document.documentElement.style.setProperty('--cols', cols);
+  $('totalCount').textContent = KEYS.size;
+}
+renderBoard();
+applyColorway(boardEl, look.colorway);
+boardEl.dataset.profile = look.caps;
 
 const WORD = 'Keyscape';
 const wordmark = $('wordmark');
@@ -68,11 +84,17 @@ $('clearTested').addEventListener('click', () => {
   $('testedCount').textContent = 0;
 });
 
+// Map keys that don't exist on the current layout to their closest match.
 function normalizeCode(code) {
-  if (code === 'NumpadEnter') return 'Enter';
-  if (code === 'MetaRight' || code === 'OSRight') return 'ContextMenu';
+  if (KEYS.has(code)) return code;
   if (code === 'OSLeft') return 'MetaLeft';
-  return code;
+  if (code === 'OSRight') return normalizeCode('MetaRight');
+  if (code === 'MetaRight') return 'ContextMenu';
+  if (code === 'NumpadEnter') return 'Enter';
+  const d = /^Numpad(\d)$/.exec(code);
+  if (d) return 'Digit' + d[1];
+  const sym = { NumpadDivide: 'Slash', NumpadSubtract: 'Minus', NumpadDecimal: 'Period', NumpadAdd: 'Equal', NumpadMultiply: 'Digit8' }[code];
+  return sym || code;
 }
 
 /**
@@ -103,7 +125,7 @@ function release(code) {
   setPressed(code, false);
   synth.play('up', { size: KEYS.get(code)?.width || 1 });
   // macOS swallows keyup for other keys while ⌘ is held
-  if (code === 'MetaLeft' || code === 'ContextMenu') [...held].forEach(release);
+  if (code === 'MetaLeft' || code === 'MetaRight' || code === 'ContextMenu') [...held].forEach(release);
 }
 
 function releaseAll() { [...held].forEach(release); }
@@ -341,9 +363,8 @@ function shortcutKeys(s) {
   else if (s.mod) parts.push(MOD_LABEL);
   if (s.alt) parts.push(IS_MAC ? '⌥' : 'Alt');
   if (s.shift) parts.push('Shift');
-  const k = KEYS.get(s.code);
-  const label = s.code === 'Space' ? 'Space' : s.code === 'Backspace' ? '⌫' : s.code === 'Home' ? 'Home'
-    : (k?.el.querySelector('.legend:last-child')?.textContent || s.code);
+  const FIXED = { Space: 'Space', Backspace: '⌫', Home: 'Home', ArrowLeft: '←', Equal: '=', Minus: '-', Period: '.' };
+  const label = FIXED[s.code] || s.code.replace(/^Key/, '');
   parts.push(label);
   return parts;
 }
@@ -380,7 +401,7 @@ function renderCombo(last, name) {
   const parts = [];
   const has = (a, b) => held.has(a) || held.has(b);
   if (has('ControlLeft', 'ControlRight')) parts.push('Ctrl');
-  if (has('MetaLeft', 'ContextMenu')) parts.push(IS_MAC ? '⌘' : 'Win');
+  if (has('MetaLeft', 'MetaRight') || held.has('ContextMenu')) parts.push(IS_MAC ? '⌘' : 'Win');
   if (has('AltLeft', 'AltRight')) parts.push(IS_MAC ? '⌥' : 'Alt');
   if (has('ShiftLeft', 'ShiftRight')) parts.push('Shift');
   if (last) parts.push(last);
@@ -428,7 +449,6 @@ function shortcutPress(ev, code) {
 
 /* ---------- Games ---------- */
 let game = null;
-const CHASE_POOL = [...KEYS.keys()].filter((c) => /^(Key[A-Z]|Digit\d)$/.test(c));
 const GAME_SECONDS = 30;
 
 function makeTimer(el, seconds, onEnd) {
@@ -455,7 +475,8 @@ function startChase() {
   const next = () => {
     if (target) KEYS.get(target).el.classList.remove('target');
     let c;
-    do { c = CHASE_POOL[Math.floor(Math.random() * CHASE_POOL.length)]; } while (c === target);
+    const pool = [...KEYS.keys()].filter((k) => /^(Key[A-Z]|Digit\d)$/.test(k));
+    do { c = pool[Math.floor(Math.random() * pool.length)]; } while (c === target);
     target = c;
     KEYS.get(target).el.classList.add('target');
     shownAt = performance.now();
@@ -576,3 +597,79 @@ $('sprintText').textContent = 'Press Start sprint, then begin typing. The timer 
 /* First interaction unlocks audio on iOS/Safari */
 const unlock = () => { synth.ensure(); window.removeEventListener('pointerdown', unlock); };
 window.addEventListener('pointerdown', unlock);
+
+/* ---------- Customize: size, keycaps, colorway, site theme ---------- */
+function segButtons(container, options, current, onPick) {
+  const buttons = Object.entries(options).map(([id, label]) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = typeof label === 'string' ? label : label.name;
+    if (label.blurb) b.title = label.blurb;
+    b.setAttribute('aria-pressed', String(id === current));
+    b.addEventListener('click', (e) => {
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      onPick(id);
+      if (e.detail) b.blur(); // keep typing on the board after a mouse click
+    });
+    container.appendChild(b);
+    return b;
+  });
+}
+
+segButtons($('sizeSeg'), LAYOUTS, look.layout, (id) => {
+  if (id === look.layout) return;
+  if (game) game.stop(false);
+  releaseAll();
+  virtualShift = false;
+  tested.clear();
+  $('testedCount').textContent = 0;
+  look.layout = id;
+  store.set('layout', id);
+  renderBoard();
+});
+
+segButtons($('profileSeg'), PROFILES_CAP, look.caps, (id) => {
+  look.caps = id;
+  boardEl.dataset.profile = id;
+  store.set('caps', id);
+});
+
+const swatches = $('swatches');
+const swatchButtons = Object.entries(COLORWAYS).map(([id, c]) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'swatch';
+  b.setAttribute('aria-pressed', String(id === look.colorway));
+  const chips = document.createElement('span');
+  chips.className = 'chips';
+  chips.setAttribute('aria-hidden', 'true');
+  [c.alpha[0], c.mod[0], c.accent[0], c.case[1]].forEach((col) => {
+    const i = document.createElement('i');
+    i.style.background = col;
+    chips.appendChild(i);
+  });
+  const name = document.createElement('span');
+  name.textContent = c.name;
+  b.append(chips, name);
+  b.addEventListener('click', (e) => {
+    look.colorway = id;
+    applyColorway(boardEl, id);
+    store.set('colorway', id);
+    swatchButtons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (e.detail) b.blur();
+  });
+  swatches.appendChild(b);
+  return b;
+});
+
+const THEME_COLOR = { light: '#CFE2DC', dark: '#15232B', contrast: '#FFFFFF', minimal: '#F6F6F4' };
+function applyTheme(id) {
+  document.documentElement.dataset.theme = id;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[id]);
+}
+applyTheme(look.theme);
+segButtons($('themeSeg'), SITE_THEMES, look.theme, (id) => {
+  look.theme = id;
+  applyTheme(id);
+  store.set('theme', id);
+});
