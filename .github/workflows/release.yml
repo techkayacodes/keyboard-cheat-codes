@@ -1,10 +1,14 @@
 name: Release
 
-# Push a tag like v1.0.0 to build the site zip and publish a GitHub release.
+# Two ways to release:
+#  - Push a tag like v1.0.0, or
+#  - Run this workflow from the Actions tab ("Run workflow"). It releases the
+#    version in package.json and creates the matching tag for you.
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,33 +17,39 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the tagged code
+      - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Check the tag matches package.json
+      - name: Work out the version
         run: |
           pkg="v$(node -p "require('./package.json').version")"
-          if [ "$pkg" != "$GITHUB_REF_NAME" ]; then
-            echo "Tag $GITHUB_REF_NAME does not match package.json version $pkg" >&2
-            exit 1
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            tag="$GITHUB_REF_NAME"
+            if [ "$pkg" != "$tag" ]; then
+              echo "Tag $tag does not match package.json version $pkg" >&2
+              exit 1
+            fi
+          else
+            tag="$pkg"
           fi
+          echo "TAG=$tag" >> "$GITHUB_ENV"
 
       - name: Build the site zip
         run: |
-          name="keyscape-$GITHUB_REF_NAME"
+          name="keyscape-$TAG"
           mkdir -p "dist/$name"
           cp -r index.html css js docs .nojekyll README.md CHANGELOG.md LICENSE "dist/$name/"
           (cd dist && zip -r "$name.zip" "$name")
 
       - name: Pull this version's notes from the changelog
         run: |
-          awk -v v="## $GITHUB_REF_NAME" '
+          awk -v v="## $TAG" '
             $0 == v { found = 1; next }
             found && /^## / { exit }
             found { print }
           ' CHANGELOG.md > dist/notes.md
           if [ ! -s dist/notes.md ]; then
-            echo "No section '## $GITHUB_REF_NAME' found in CHANGELOG.md" >&2
+            echo "No section '## $TAG' found in CHANGELOG.md" >&2
             exit 1
           fi
 
@@ -47,6 +57,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" "dist/keyscape-$GITHUB_REF_NAME.zip" \
-            --title "Keyscape $GITHUB_REF_NAME" \
+          gh release create "$TAG" "dist/keyscape-$TAG.zip" \
+            --target "$GITHUB_SHA" \
+            --title "Keyscape $TAG" \
             --notes-file dist/notes.md

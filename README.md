@@ -100,11 +100,13 @@ Keep **Enforce HTTPS** ticked in the Pages settings.
 ### Making a release
 1. Add a section for the new version at the top of [CHANGELOG.md](CHANGELOG.md), for example `## v1.1.0`.
 2. Update `version` in `package.json` to match.
-3. Merge to `main`, then push a tag with the same name:
-   ```bash
-   git tag v1.1.0 && git push origin v1.1.0
-   ```
-4. The **Release** workflow builds `keyscape-v1.1.0.zip` and publishes a GitHub release, using that version's changelog section as the release notes.
+3. Merge to `main`, then either:
+   - go to **Actions → Release → Run workflow** and click **Run workflow**, or
+   - push a tag with the same name:
+     ```bash
+     git tag v1.1.0 && git push origin v1.1.0
+     ```
+4. The **Release** workflow creates the tag if needed, builds `keyscape-v1.1.0.zip`, and publishes a GitHub release using that version's changelog section as the release notes.
 
 ### Project layout
 ```
