@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A 3D keyboard playground: switch sound board, keyboard tester, shortcut tester and typing games.",
   "private": true,
+  "license": "MIT",
   "homepage": "https://keyboardcheat.codes",
   "repository": {
     "type": "git",
