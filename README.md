@@ -1,40 +1,83 @@
 # Keyscape
 
-A 3D keyboard playground in the browser. Tilt the board, test shortcuts, play typing games, and hear what different switches sound like.
+**Try it now: [keyboardcheat.codes](https://keyboardcheat.codes)**
 
-## What's on the page
+Keyscape is a keyboard playground that runs in your browser. Type on a 3D keyboard, hear what different mechanical switches sound like, check that every key on your own keyboard works, and practice shortcuts and typing speed. There's nothing to install and no account to create.
 
-- **3D keyboard.** Built in CSS 3D, in five sizes: 60%, 65%, 75%, TKL and full-size with a numpad. Drag the space around it to tilt it. Keys press down when you type on your own keyboard, and you can tap or click them too. A green dot marks each key you've tested, which helps when checking a new board.
-- **Customize it.** Four keycap shapes (Cherry, SA, DSA, low profile) and seven colorways (Tidepool, Ember, Sakura, Matcha, Office beige, Mono, Signal). Your choices are remembered.
-- **Site themes.** Light, Dark, High contrast and Minimal. The theme changes the page around the keyboard; colorways change the keys.
-- **Sound board.** Six switch sounds, all generated live with the Web Audio API (no audio files): Thock, Clack, Clicky, Creamy, Marbly and Typewriter (with a bell on Enter). You can change the case material (Aluminum, Polycarbonate, Brass, Walnut), volume and pitch.
-- **Shortcut tester.** Press common shortcuts (copy, paste, undo, save, find and more) and they get ticked off. The page adapts to Mac or Windows. The browser doesn't act on them while this tab is open. A live log shows each key's `key`, `code` and side.
-- **Games.** *Chase the light* (hit the glowing key, 30 seconds) and *Type sprint* (30-second WPM test, with the next key lit on the board). Best scores are saved in your browser.
+![The Keyscape page: a tilted 3D keyboard in the Tidepool colorway, with size and keycap options below it](docs/screenshot.png)
 
-## Run it locally
+## What you can do
 
-It's plain HTML, CSS and JavaScript with no build step. Serve the folder with any static server:
+### Hear different switches
+Pick a switch and start typing. Every press is generated live, so no two sound exactly alike.
 
-```bash
-python3 -m http.server 8000
-```
+| Switch | Sounds like |
+| --- | --- |
+| Thock | Deep and rounded |
+| Clack | Bright and sharp |
+| Clicky | A crisp click on the way down and back up |
+| Creamy | Smooth and quiet |
+| Marbly | A glassy, high-pitched pop |
+| Typewriter | A typebar strike, with a bell when you press Enter |
 
-Then open http://localhost:8000. You need a server because the JavaScript is loaded as ES modules, which don't load from `file://`.
+You can also change the case material (aluminum, polycarbonate, brass or walnut), the volume and the pitch, or press **Play typing demo** to hear a sentence typed for you.
 
-## Put it live with GitHub Pages
+### Build your keyboard
+- **Size:** 60%, 65%, 75%, TKL or full-size with a numpad.
+- **Keycaps:** Cherry, SA (tall and rounded), DSA (flat) or low profile.
+- **Colorway:** Tidepool, Ember, Sakura, Matcha, Office beige, Mono or Signal.
+- **Tilt it:** drag the empty space around the keyboard. **Reset tilt** puts it back.
 
-1. In this repo, open **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
-3. Pick the branch (`main` once this work is merged) and the **/ (root)** folder, then **Save**.
-4. After a minute or so the site is live at `https://techkayacodes.github.io/keyscape/`.
+### Test your own keyboard
+Every key you press gets a small green light on the board, and the counter shows how many you've tested. If a key never lights up, it may not be working. Press **Clear** to start over.
 
-The `.nojekyll` file tells Pages to serve the files as they are.
+### Practice shortcuts
+Open **Shortcut tester** and try common shortcuts like copy, paste, undo, save and find. Each one gets a check mark when you find it. While this tab is open, the page catches the shortcuts so your browser doesn't actually save or print anything. The key event log shows exactly what your keyboard sends, which helps when you're setting up a new keyboard or a remap.
 
-## Custom domain: keyboardcheat.codes
+### Play a game
+- **Chase the light:** a key glows, and you press it as fast as you can. You have 30 seconds.
+- **Type sprint:** type as many words as you can in 30 seconds. The next key glows on the board to guide you.
 
-The site is served at **https://keyboardcheat.codes**. The `CNAME` file in this repo tells GitHub Pages which domain to answer for.
+Your best scores are saved.
 
-DNS records at Namecheap (**Domain List → Manage → Advanced DNS → Host Records**):
+### Pick a site theme
+Choose **Light**, **Dark**, **High contrast** or **Minimal** at the top of the page. The theme changes the page; the colorway changes the keyboard, so you can mix them however you like.
+
+## Tips
+- **No sound?** Click anywhere on the page once. Browsers keep sound off until you interact with a page. Also check that **Mute** isn't on and the volume slider isn't at zero.
+- **On a phone or tablet:** tap the keys on screen. Tap **Shift** once to type a capital letter or symbol.
+- **Your settings stay put.** Your switch, keyboard, theme and best scores are saved in your browser for next time. Nothing you type is sent anywhere.
+
+## Download and run it yourself
+
+Each [release](https://github.com/techkayacodes/keyscape/releases) includes a ready-to-use zip of the website.
+
+1. Download `keyscape-vX.Y.Z.zip` from the latest release and unzip it.
+2. Start a small local web server in that folder. Pick one:
+   - With Python:
+     ```bash
+     python3 -m http.server 8000
+     ```
+   - With Node.js:
+     ```bash
+     npx http-server -p 8000
+     ```
+3. Open http://localhost:8000 in your browser.
+
+Opening `index.html` by double-clicking it won't work, because browsers block the site's scripts on `file://` pages.
+
+If you've cloned the repository and have Node.js, `npm start` does the same thing.
+
+## For maintainers
+
+<details>
+<summary>Hosting, custom domain and releases</summary>
+
+### Hosting
+The site is plain HTML, CSS and JavaScript with no build step. GitHub Pages serves it from the `main` branch, root folder (**Settings → Pages → Deploy from a branch**). The `.nojekyll` file makes Pages serve the files as they are.
+
+### Custom domain
+The `CNAME` file points Pages at **keyboardcheat.codes**. The DNS records at Namecheap (**Domain List → Manage → Advanced DNS**) are:
 
 | Type | Host | Value |
 | --- | --- | --- |
@@ -44,17 +87,25 @@ DNS records at Namecheap (**Domain List → Manage → Advanced DNS → Host Rec
 | A Record | `@` | `185.199.111.153` |
 | CNAME Record | `www` | `techkayacodes.github.io.` |
 
-Remove any default Namecheap records for `@` or `www` (the parking page CNAME and URL redirect records) first.
+Keep **Enforce HTTPS** ticked in the Pages settings.
 
-Then in **Settings → Pages**, confirm the custom domain shows `keyboardcheat.codes`, wait for the DNS check to pass, and tick **Enforce HTTPS**.
+### Making a release
+1. Add a section for the new version at the top of [CHANGELOG.md](CHANGELOG.md), for example `## v1.1.0`.
+2. Update `version` in `package.json` to match.
+3. Merge to `main`, then push a tag with the same name:
+   ```bash
+   git tag v1.1.0 && git push origin v1.1.0
+   ```
+4. The **Release** workflow builds `keyscape-v1.1.0.zip` and publishes a GitHub release, using that version's changelog section as the release notes.
 
-## Project layout
-
+### Project layout
 ```
 index.html        page structure
-css/styles.css    colorway, 3D keyboard, layout
-js/keyboard.js    the five layouts and key-to-code mapping
-js/themes.js      keycap colorways, keycap shapes, site themes
+css/styles.css    site themes, 3D keyboard, layout
+js/keyboard.js    the five keyboard layouts and key mapping
+js/themes.js      colorways, keycap shapes, site themes
 js/audio.js       switch sound synthesis
-js/app.js         input, tilt, shortcuts, games
+js/app.js         typing, tilt, shortcuts, games, settings
 ```
+
+</details>
