@@ -58,6 +58,14 @@ export const COLORWAYS = {
     mod: ['#2E2E2E', '#000000', '#FFE14D'],
     accent: ['#FFD400', '#B39400', '#000000'],
   },
+  cyberpunk2077: {
+    name: 'Cyberpunk 2077',
+    case: ['#0B0C10', '#08090C', '#050609'], plate: '#030407',
+    alpha: ['#12131A', '#090A10', '#FCEE09'],
+    fn: ['#12131A', '#090A10', '#FCEE09'],
+    mod: ['#1F2029', '#101117', '#00F0FF'],
+    accent: ['#FF003C', '#B3002A', '#FFFFFF'],
+  },
 };
 
 export function applyColorway(el, id) {
