@@ -25,7 +25,7 @@ You can also change the case material (aluminum, polycarbonate, brass or walnut)
 ### Build your keyboard
 - **Size:** 60%, 65%, 75%, TKL or full-size with a numpad.
 - **Keycaps:** Cherry, SA (tall and rounded), DSA (flat) or low profile.
-- **Colorway:** Tidepool, Ember, Sakura, Matcha, Office beige, Mono or Signal.
+- **Colorway:** Tidepool, Ember, Sakura, Matcha, Office beige, Mono, Signal or Cyberpunk 2077.
 - **Tilt it:** drag the empty space around the keyboard. **Reset tilt** puts it back.
 
 ### Test your own keyboard
